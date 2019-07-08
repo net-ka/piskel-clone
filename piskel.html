@@ -2,13 +2,58 @@
 <html>
   <head>
     <meta charset="UTF-8">
+    <meta name="google-signin-client_id" content="558080730389-lpis8c67ijttr9vqsvbta0ur0n1ga8ss.apps.googleusercontent.com">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+
     <title>Piskel-Clone App</title>
   </head>
 
   <body>
 
     <header>
-      <h1> Piskel-Clone </h1>
+      <h1 class="header"> Piskel-Clone </h1>
+      <div class="g-signin-wrapper">
+        <div class="g-signin2" data-onsuccess="onSignIn"></div>
+
+        <div id="signOut" class="hidden signOut" onclick="signOut();">Sign out</div>
+
+        <script>
+          function signOut() {
+            var auth2 = gapi.auth2.getAuthInstance();
+            auth2.signOut().then(function () {
+              document.getElementById('signOut').classList.add('hidden');
+              const icon = document.querySelector('.abcRioButtonContentWrapper');
+              const profileImage = document.querySelector('.abcRioButtonContentWrapper img');
+              const profileName = document.querySelector('.profileName');
+              icon.removeChild(profileImage);
+              icon.removeChild(profileName);
+              document.querySelector('.abcRioButtonContents').classList.remove('none-visible');
+            });
+          }
+        </script>
+
+        <script>
+          function onSignIn(googleUser) {
+            document.querySelector('.abcRioButtonContents').classList.add('none-visible');
+            const profile = googleUser.getBasicProfile();
+            const profileNameData = profile.getName();
+            const icon = document.querySelector('.abcRioButtonContentWrapper');
+            const profileImage = document.createElement('img');
+            profileImage.width = 30;
+            profileImage.height = 30;
+            profileImage.marginTop = 8;
+            icon.appendChild(profileImage);
+            profileImage.src = profile.getImageUrl();
+
+            const profileName = document.createElement('span');
+            profileName.classList.add('profileName');
+            profileName.innerHTML = profileNameData;
+            icon.appendChild(profileName);
+
+            document.getElementById('signOut').classList.remove('hidden');
+          }
+        </script>
+      </div>
     </header>
 
     <main>
@@ -37,7 +82,11 @@
         <div class="colors">
           <input class="secondary-color" id="secondary-color" type="color">
           <input class="primary-color" id="primary-color" type="color">
+          <img class="rotate-color" id="rotate-color" alt="Rotate color">
         </div>
+
+        <button class="keyboad-wrapper" id="keyboad-wrapper" type="button"><img class="keyboard-tool" id="keyboard-tool" alt="Keyboard"></button>
+
       </div>
 
       <div class = "fraims-tool-wrapper">
@@ -49,7 +98,7 @@
           <div class="canvasWrapper">
               <img class="copy" id="copy">
               <img class="remove" id="remove">
-              <canvas class="frame" id="frame"></canvas>
+              <canvas class="frame" id="frame" width="64" height="64"></canvas>
           </div>
         </div>
       </div>
@@ -66,11 +115,74 @@
                    min="1" max="24">
             <label class="speedText" for="speed">Speed</label>
           </div>
-        <!-- <button class="animation-start" id="animation-start" type="button">Start animation</button> -->
         <button class="full-screen" id="full-screen" type="button">Full screen</button>
+
+        <div class="save">
+          <button class="save-gif" id="save-gif" type="button">Save .gif</button>
+        </div>
       </div>
-
   </main>
-
+  <div class="hotkeys-container hidden" id="hotkeys-container">
+    <h2 class="hotkeys-title">Keyboard shortcuts</h2>
+    <ul class="hotkeys-list">
+      <li class="hotkeys-item">
+        <img class="hotkeys-tool" id="hotkeys-img-pen" alt="Pen" title="Pen tool">
+        <input type="text" class="hotkey-input" id="hotkey-pen" maxlength="1" size="1">
+      </li>
+      <li class="hotkeys-item">
+        <img class="hotkeys-tool" id="hotkeys-img-eraser" alt="Eraser" title="Eraser tool">
+        <input type="text" class="hotkey-input" id="hotkey-easer" maxlength="1" size="1">
+      </li>
+      <li class="hotkeys-item">
+        <img class="hotkeys-tool" id="hotkeys-img-pipette" alt="Pipette" title="Color picker">
+        <input type="text" class="hotkey-input" id="hotkey-pipette" maxlength="1" size="1">
+      </li>
+      <li class="hotkeys-item">
+        <img class="hotkeys-tool" id="hotkeys-img-stroke" alt="Stroke" title="Stroke tool">
+        <input type="text" class="hotkey-input" id="hotkey-stroke" maxlength="1" size="1">
+      </li>
+      <li class="hotkeys-item">
+        <img class="hotkeys-tool" id="hotkeys-img-mirror" alt="Mirror pen" title="Vertical mirror pen">
+        <input type="text" class="hotkey-input" id="hotkey-mirror" maxlength="1" size="1">
+      </li>
+      <li class="hotkeys-item">
+        <img class="hotkeys-tool" id="hotkeys-img-rectangle" alt="Rectangle" title="Rectangle tool">
+        <input type="text" class="hotkey-input" id="hotkey-rectangle" maxlength="1" size="1">
+      </li>
+      <li class="hotkeys-item">
+        <img class="hotkeys-tool" id="hotkeys-img-circle" alt="Circle" title="Circle tool">
+        <input type="text" class="hotkey-input" id="hotkey-circle" maxlength="1" size="1">
+      </li>
+      <li class="hotkeys-item">
+        <img class="hotkeys-tool" id="hotkeys-img-move" alt="Move" title="Move tool">
+        <input type="text" class="hotkey-input" id="hotkey-move" maxlength="1" size="1">
+      </li>
+      <li class="hotkeys-item">
+        <img class="hotkeys-tool" id="hotkeys-img-lighten" alt="Lighten" title="Lighten tool">
+        <input type="text" class="hotkey-input" id="hotkey-lighten" maxlength="1" size="1">
+      </li>
+      <li class="hotkeys-item">
+        <img class="hotkeys-tool" id="hotkeys-img-darken" alt="Darken" title="Darken tool">
+        <input type="text" class="hotkey-input" id="hotkey-darken" maxlength="1" size="1">
+      </li>
+      <li class="hotkeys-item">
+        <img class="hotkeys-tool" id="hotkeys-img-bucket-px" alt="Paint bucket same pixels" title="Paint all pixels of the same color">
+        <input type="text" class="hotkey-input" id="hotkey-bucket-px" maxlength="1" size="1">
+      </li>
+      <li class="hotkeys-item">
+        <img class="hotkeys-tool" id="hotkeys-img-bucket" alt="Paint bucket" title="Canvas bucket tool">
+        <input type="text" class="hotkey-input" id="hotkey-bucket" maxlength="1" size="1">
+      </li>
+      <li class="hotkeys-item">
+        <img class="hotkeys-tool" id="hotkeys-img-ditchering" alt="Ditchering" title="Dithering tool">
+        <input type="text" class="hotkey-input" id="hotkey-ditchering" maxlength="1" size="1">
+      </li>
+      <li class="hotkeys-item">
+        <img class="hotkeys-tool" id="hotkeys-img-clear" alt="Clear canvas" title="Clear canvas">
+        <input type="text" class="hotkey-input" id="hotkey-clear" maxlength="1" size="1">
+      </li>
+    </ul>
+    <button class="hotkeys-close" id="hotkeys-close" type="button">X</button>
+  </div>
   <script type="text/javascript" src="piskel.js"></script></body>
 </html>
